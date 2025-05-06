@@ -8,4 +8,5 @@
     <color name="black">#FF000000</color>
     <color name="softgreen">#409944</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="darkgreen">#014904</color>
 </resources>

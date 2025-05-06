@@ -11,3 +11,5 @@ data class User(
     val password: String,
     val role: String // "admin" or "user"
 )
+
+

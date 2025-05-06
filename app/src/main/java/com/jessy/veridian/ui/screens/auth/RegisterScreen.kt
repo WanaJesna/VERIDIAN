@@ -1,6 +1,7 @@
-package com.j0e101.harakamall.ui.screens.auth
+package com.jessy.veridian.ui.screens
 
 import android.widget.Toast
+
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
@@ -32,6 +33,7 @@ import com.jessy.veridian.model.User
 import com.jessy.veridian.navigation.ROUT_LOGIN
 import com.jessy.veridian.viewmodel.AuthViewModel
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
@@ -45,12 +47,8 @@ fun RegisterScreen(
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
-    val animatedAlpha by animateFloatAsState(
-        targetValue = 1f,
-        animationSpec = tween(durationMillis = 1500, easing = LinearEasing),
-        label = "Animated Alpha"
-    )
 
     Column(
         modifier = Modifier
@@ -60,17 +58,17 @@ fun RegisterScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(8.dp))
-        AnimatedVisibility(visible = true, enter = fadeIn(), exit = fadeOut()) {
-            Text(
-                "Create Your Account",
-                fontSize = 40.sp,
-                fontFamily = FontFamily.Cursive
-            )
-        }
+
+        // Title
+        Text(
+            text = "Create Your Account",
+            fontSize = 40.sp,
+            fontFamily = FontFamily.Cursive
+        )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Username
+        // Username Input
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
@@ -78,13 +76,10 @@ fun RegisterScreen(
             leadingIcon = { Icon(Icons.Filled.Person, contentDescription = "Username Icon") },
             modifier = Modifier.fillMaxWidth()
         )
-        //End of username
-
-
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        //Email
+        // Email Input
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
@@ -93,48 +88,8 @@ fun RegisterScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth()
         )
-        //End of email
 
         Spacer(modifier = Modifier.height(8.dp))
-
-
-        //Role
-        var role by remember { mutableStateOf("user") }
-        val roleOptions = listOf("user", "admin")
-        var expanded by remember { mutableStateOf(false) }
-
-        ExposedDropdownMenuBox(
-            expanded = expanded,
-            onExpandedChange = { expanded = !expanded }
-        ) {
-            OutlinedTextField(
-                value = role,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text("Select Role") },
-                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                modifier = Modifier.menuAnchor().fillMaxWidth()
-            )
-            ExposedDropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                roleOptions.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        text = { Text(selectionOption) },
-                        onClick = {
-                            role = selectionOption
-                            expanded = false
-                        }
-                    )
-                }
-            }
-        }
-        //End of role
-
-
-
-
 
 
         // Password Input Field with Show/Hide Toggle
@@ -156,6 +111,9 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
+
+
+
         // Confirm Password Input Field with Show/Hide Toggle
         OutlinedTextField(
             value = confirmPassword,
@@ -175,42 +133,61 @@ fun RegisterScreen(
 
         Spacer(modifier = Modifier.height(5.dp))
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-                .background(
-                    brush = Brush.horizontalGradient(
-                        colors = listOf(Color(0xFF00C6FF), Color(0xFF0072FF))
-                    ),
-                    shape = MaterialTheme.shapes.medium
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-            Button(
-                onClick = {
-                    if (username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank()) {
-                        Toast.makeText(context, "All fields are required", Toast.LENGTH_SHORT).show()
-                    } else if (password != confirmPassword) {
-                        Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                    } else {
-                        authViewModel.registerUser(User(username = username, email = email, role = role, password = password))
-                        onRegisterSuccess()
-                    }
-                },
-                modifier = Modifier.fillMaxSize(),
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
-            ) {
-                Text("Register", color = Color.White)
-            }
+
+
+        // Error Message
+        if (errorMessage.isNotEmpty()) {
+            Text(
+                text = errorMessage,
+                color = Color.Red,
+                fontSize = 14.sp,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
         }
 
-        Spacer(modifier = Modifier.height(5.dp))
-
-        TextButton(
-            onClick = { navController.navigate(ROUT_LOGIN) }
+        // Register Button
+        Button(
+            onClick = {
+                when {
+                    username.isBlank() || email.isBlank() || password.isBlank() || confirmPassword.isBlank() -> {
+                        errorMessage = "All fields are required"
+                    }
+                    password.length < 8 -> {
+                        errorMessage = "Password must be at least 8 characters long"
+                    }
+                    !isPasswordStrong(password) -> {
+                        errorMessage = "Password must contain uppercase, lowercase, number, and special character"
+                    }
+                    password != confirmPassword -> {
+                        errorMessage = "Passwords do not match"
+                    }
+                    else -> {
+                        errorMessage = ""
+                        authViewModel.registerUser(
+                            User(username = username, email = email, role = "user", password = password)
+                        )
+                        Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
+                        onRegisterSuccess()
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2E7D32))
         ) {
+            Text("Register", color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // Login Navigation
+        TextButton(onClick = { navController.navigate(ROUT_LOGIN) }) {
             Text("Already have an account? Login")
         }
     }
+}
+
+// Helper function to check password strength
+fun isPasswordStrong(password: String): Boolean {
+    val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@\$!%*?&])[A-Za-z\\d@\$!%*?&]{8,}$")
+    return passwordRegex.matches(password)
 }

@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.jessy.veridian.R
 import com.jessy.veridian.navigation.ROUT_HOME
+import com.jessy.veridian.navigation.ROUT_ROLE
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,7 @@ fun SplashScreen(navController: NavController) {
     val coroutine = rememberCoroutineScope()
     coroutine.launch {
         delay(2000)
-        navController.navigate(ROUT_HOME)
+        navController.navigate(ROUT_ROLE)
     }
 
     // UI
