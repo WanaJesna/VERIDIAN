@@ -10,4 +10,13 @@ interface AssignmentDao {
 
     @Query("SELECT * FROM assignments WHERE teacherId = :teacherId")
     suspend fun getAssignmentsByTeacher(teacherId: Int): List<Assignment>
+
+    @Insert
+    suspend fun insertProduct(product: Assignment)
+
+    @Update
+    suspend fun updateProduct(product: Assignment)
+
+    @Delete
+    suspend fun deleteProduct(product: Assignment)
 }
