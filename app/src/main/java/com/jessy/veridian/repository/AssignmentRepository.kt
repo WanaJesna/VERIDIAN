@@ -2,17 +2,16 @@ package com.jessy.veridian.repository
 
 import android.content.Context
 import com.jessy.veridian.data.AssignmentDatabase
-import com.jessy.veridian.model.Assignment
 import com.jessy.veridian.database.entities.Assignment
 
-class ProductRepository(context: Context) {
+class AssignmentRepository(context: Context) {
     private val assignmentDao = AssignmentDatabase.getDatabase(context).assignmentDao()
 
-    suspend fun insertProduct(product: Assignment) {
-        assignmentDao.insertProduct(product)
+    suspend fun insertAssignment(assignment: Assignment) {
+        assignmentDao.insertAssignments(assignment)
     }
 
-    fun getAllProducts() = assignmentDao.getAllAssignment()
+    fun getAllAssignments() = assignmentDao.getAllAssignment()
 
     suspend fun deleteAssignment( assignment: Assignment) = assignmentDao.deleteAssignment(assignment)
 }

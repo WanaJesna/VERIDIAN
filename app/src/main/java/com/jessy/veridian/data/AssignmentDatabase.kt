@@ -1,5 +1,8 @@
-package com.jessy.veridian.database
+package com.jessy.veridian.data
 
+
+
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -7,19 +10,20 @@ import com.jessy.veridian.database.dao.AssignmentDao
 import com.jessy.veridian.database.entities.Assignment
 
 @Database(entities = [Assignment::class], version = 1, exportSchema = false)
-abstract class AppDatabase : RoomDatabase() {
+abstract class AssignmentDatabase : RoomDatabase() {
     abstract fun assignmentDao(): AssignmentDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: AssignmentDatabase? = null
 
-        fun getDatabase(context: android.content.Context): AppDatabase {
+        fun getDatabase(context: Context): AssignmentDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                     context.applicationContext,
-                    AppDatabase::class.java,
-                    "veridian_database"
+                    AssignmentDatabase::class.java,
+                    "assignment_database"
                 ).build()
                 INSTANCE = instance
                 instance
