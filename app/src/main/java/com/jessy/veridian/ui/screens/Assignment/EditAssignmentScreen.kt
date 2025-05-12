@@ -30,7 +30,7 @@ import com.jessy.veridian.viewmodel.AssignmentViewModel
 @Composable
 fun EditAssignmentScreen(assignmentId: Int?, navController: NavController, viewModel: AssignmentViewModel) {
     val context = LocalContext.current
-    val assignmentList by viewModel.assignments.observeAsState(emptyList())
+    val assignmentList by viewModel.allAssignments.observeAsState(emptyList())
 
     // Ensure assignmentId is valid
     val assignment = remember(assignmentList) { assignmentList.find { it.id == assignmentId } }
@@ -38,6 +38,7 @@ fun EditAssignmentScreen(assignmentId: Int?, navController: NavController, viewM
     // Track state variables only when assignment is found
     var title by remember { mutableStateOf(assignment?.title ?: "") }
     var description by remember { mutableStateOf(assignment?.description ?: "") }
+    var teacherid by remember { mutableStateOf(assignment?.description ?: "") }
     var imagePath by remember { mutableStateOf(assignment?.imagePath ?: "") }
     var showMenu by remember { mutableStateOf(false) }
 
@@ -98,6 +99,14 @@ fun EditAssignmentScreen(assignmentId: Int?, navController: NavController, viewM
                     value = title,
                     onValueChange = { title = it },
                     label = { Text("Assignment Title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                OutlinedTextField(
+                    value = teacherid,
+                    onValueChange = { teacherid = it },
+                    label = { Text("Teacher id") },
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))

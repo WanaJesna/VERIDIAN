@@ -5,27 +5,28 @@ import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.jessy.veridian.database.AppDatabase
-import com.jessy.veridian.database.entities.Assignment
+import com.jessy.veridian.data.AssignmentDatabase
+import com.jessy.veridian.model.Assignment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
+import kotlin.String
 
 class AssignmentViewModel(app: Application) : AndroidViewModel(app) {
 
     private val context = app.applicationContext
-    private val assignmentDao = AppDatabase.getDatabase(app).assignmentDao()
-
+    private val  assignmentDao = AssignmentDatabase.getDatabase(app).assignmentDao()
     val allAssignments: LiveData<List<Assignment>> = assignmentDao.getAllAssignments()
 
-    fun addAssignment(title: String, description: String, imageUri: String) {
+    fun addAssignment(title: String,description: String, teacherId: String, imageUri: String) {
         viewModelScope.launch(Dispatchers.IO) {
             val savedImagePath = saveImageToInternalStorage(Uri.parse(imageUri))
             val newAssignment = Assignment(
-                title = title,
-                description = description,
+                title= title,
+            description=description,
+           teacherId=teacherId,
                 imagePath = savedImagePath // Use saved image path
             )
             assignmentDao.insertAssignment(newAssignment)

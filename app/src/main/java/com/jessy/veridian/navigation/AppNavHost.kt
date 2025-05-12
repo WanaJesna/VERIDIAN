@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.jessy.veridian.data.UserDatabase
 import com.jessy.veridian.repository.UserRepository
+import com.jessy.veridian.ui.screens.RegisterScreen
 import com.jessy.veridian.ui.screens.about.AboutScreen
 import com.jessy.veridian.ui.screens.auth.LoginScreen
 import com.jessy.veridian.ui.screens.home.HomeScreen
@@ -139,9 +140,6 @@ fun AppNavHost(
     }
 }
 
-@Composable
-fun RegisterScreen(x0: AuthViewModel, x1: NavHostController, content: @Composable () -> Unit) {
-    TODO("Not yet implemented")
-}
+
 
 

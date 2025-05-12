@@ -1,4 +1,4 @@
-package com.jessy.veridian.database.entities
+package com.jessy.veridian.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -8,6 +8,7 @@ data class Assignment(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val title: String,
     val description: String,
-    val teacherId: Int // Foreign key to User table
+    val teacherId: String, // Foreign key to User table
+    val imagePath: String
 )
 

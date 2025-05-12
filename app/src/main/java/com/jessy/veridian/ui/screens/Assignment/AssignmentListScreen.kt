@@ -38,8 +38,8 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.jessy.veridian.R
+import com.jessy.veridian.model.Assignment
 import com.jessy.veridian.viewmodel.AssignmentViewModel
-import com.jessy.veridian.database.entities.Assignment
 import com.jessy.veridian.navigation.ROUT_ADD_ASSIGNMENT
 import com.jessy.veridian.navigation.ROUT_EDIT_ASSIGNMENT
 import com.jessy.veridian.navigation.ROUT_ASSIGNMENT_LIST
@@ -53,11 +53,11 @@ import java.io.OutputStream
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AssignmentListScreen(navController: NavController, viewModel: AssignmentViewModel) {
-    val assignmentList by viewModel.assignments.observeAsState(emptyList())
+    val assignmentList by viewModel.allAssignments.observeAsState(emptyList())
     var showMenu by remember { mutableStateOf(false) }
     var searchQuery by remember { mutableStateOf("") }
 
-    val filteredAssignments = assignmentList.filter {
+    val filteredProducts =assignmentList.filter {
         it.title.contains(searchQuery, ignoreCase = true)
     }
 
@@ -118,7 +118,7 @@ fun AssignmentListScreen(navController: NavController, viewModel: AssignmentView
                 )
             }
         },
-        bottomBar = { BottomNavigationBar(navController) }
+        bottomBar = { BottomNavigationBar2(navController) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -127,8 +127,8 @@ fun AssignmentListScreen(navController: NavController, viewModel: AssignmentView
                 .padding(16.dp)
         ) {
             LazyColumn {
-                items(filteredAssignments.size) { index ->
-                    AssignmentItem(navController, filteredAssignments[index], viewModel)
+                items(filteredProducts.size) { index ->
+                    AssignmentItem2(navController, filteredProducts[index], viewModel)
                 }
             }
         }
@@ -137,7 +137,7 @@ fun AssignmentListScreen(navController: NavController, viewModel: AssignmentView
 
 @RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun AssignmentItem(navController: NavController, assignment: Assignment, viewModel: AssignmentViewModel) {
+fun AssignmentItem2(navController: NavController, assignment: Assignment, viewModel: AssignmentViewModel) {
     val context = LocalContext.current
 
     Card(
@@ -169,6 +169,11 @@ fun AssignmentItem(navController: NavController, assignment: Assignment, viewMod
                     fontSize = 16.sp,
                     color = Color.Gray
                 )
+                Text(
+                    text = assignment.teacherId,
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
             }
 
             // Buttons (Edit, Delete, Download PDF)
@@ -194,20 +199,11 @@ fun AssignmentItem(navController: NavController, assignment: Assignment, viewMod
                         )
                     }
 
-                    // Delete Assignment
-                    IconButton(
-                        onClick = { viewModel.deleteAssignment(assignment.id) }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Delete,
-                            contentDescription = "Delete",
-                            tint = Color.Black
-                        )
-                    }
+
 
                     // Download PDF
                     IconButton(
-                        onClick = { generateAssignmentPDF(context, assignment) }
+                        onClick = { generateAssignmentPDF2(context, assignment) }
                     ) {
                         Icon(
                             painter = painterResource(R.drawable.download),
@@ -222,7 +218,7 @@ fun AssignmentItem(navController: NavController, assignment: Assignment, viewMod
 }
 
 @RequiresApi(Build.VERSION_CODES.Q)
-fun generateAssignmentPDF(context: Context, assignment: Assignment) {
+fun generateAssignmentPDF2(context: Context, assignment: Assignment) {
     val pdfDocument = PdfDocument()
     val pageInfo = PdfDocument.PageInfo.Builder(300, 500, 1).create()
     val page = pdfDocument.startPage(pageInfo)
@@ -271,7 +267,7 @@ fun generateAssignmentPDF(context: Context, assignment: Assignment) {
 
 // Bottom Navigation Bar Component
 @Composable
-fun BottomNavigationBar(navController: NavController) {
+fun BottomNavigationBar2(navController: NavController) {
     NavigationBar(
         containerColor = Color(0xFFA2B9A2),
         contentColor = Color.White

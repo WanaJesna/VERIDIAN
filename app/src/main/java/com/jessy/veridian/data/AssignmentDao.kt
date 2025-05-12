@@ -1,22 +1,22 @@
-package com.jessy.veridian.database.dao
+package com.jessy.veridian.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
-import com.jessy.veridian.database.entities.Assignment
+import com.jessy.veridian.model.Assignment
 
 @Dao
 interface AssignmentDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAssignment(assignment: Assignment)
 
-    @Query("SELECT * FROM assignments WHERE teacherId = :teacherId")
-    suspend fun getAssignmentsByTeacher(teacherId: Int): List<Assignment>
+    @Query("SELECT * FROM assignments")
+    fun getAllAssignments(): LiveData<List<Assignment>>
 
-    @Insert
-    suspend fun insertProduct(product: Assignment)
+
 
     @Update
-    suspend fun updateProduct(product: Assignment)
+    suspend fun updateAssignment(assignment: Assignment)
 
     @Delete
-    suspend fun deleteProduct(product: Assignment)
+    suspend fun deleteAssignment(assignment: Assignment)
 }

@@ -32,6 +32,7 @@ import com.jessy.veridian.navigation.ROUT_HOME
 
 
 import com.jessy.veridian.navigation.ROUT_REGISTER
+import com.jessy.veridian.navigation.ROUT_TEACHER
 import com.jessy.veridian.viewmodel.AuthViewModel
 
 @Composable
@@ -52,7 +53,7 @@ fun LoginScreen(
                 Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT).show()
             } else {
                 if (user.role == "teacher") {
-                    navController.navigate(ROUT_TEAC) {
+                    navController.navigate(ROUT_TEACHER) {
                     }
                 } else {
                     navController.navigate(ROUT_ABOUT) {

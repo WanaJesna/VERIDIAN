@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import com.jessy.veridian.database.entities.Assignment
 import com.jessy.veridian.navigation.ROUT_ADD_ASSIGNMENT
 import com.jessy.veridian.navigation.ROUT_ASSIGNMENT_LIST
 import com.jessy.veridian.viewmodel.AssignmentViewModel
@@ -35,6 +34,7 @@ import com.jessy.veridian.viewmodel.AssignmentViewModel
 fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewModel) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var teacherid by remember { mutableStateOf("") }
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     var showMenu by remember { mutableStateOf(false) }
 
@@ -85,7 +85,7 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
             )
         },
         bottomBar = {
-            BottomNavigationBar(navController)
+            BottomNavigationBar1(navController)
         },
         content = { paddingValues ->
             Column(
@@ -100,7 +100,18 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
                     value = title,
                     onValueChange = { title = it },
                     label = { Text("Assignment Title") },
-                    leadingIcon = { Icon(imageVector = Icons.Default.Title, contentDescription = "Title") },
+                    leadingIcon = { Icon(imageVector = Icons.Default.Check, contentDescription = "Title") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                // Assignment Title
+                OutlinedTextField(
+                    value = teacherid,
+                    onValueChange = { teacherid = it },
+                    label = { Text("teacherid") },
+                    leadingIcon = { Icon(imageVector = Icons.Default.Check, contentDescription = "Title") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -111,7 +122,7 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Assignment Description") },
-                    leadingIcon = { Icon(imageVector = Icons.Default.Description, contentDescription = "Description") },
+                    leadingIcon = { Icon(imageVector = Icons.Default.Check, contentDescription = "Description") },
                     modifier = Modifier.fillMaxWidth()
                 )
 
@@ -134,7 +145,7 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
                         )
                     } else {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(imageVector = Icons.Default.Image, contentDescription = "Pick Image")
+                            Icon(imageVector = Icons.Default.Check, contentDescription = "Pick Image")
                             Text("Tap to pick image", color = Color.DarkGray)
                         }
                     }
@@ -146,7 +157,7 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
                 Button(
                     onClick = {
                         if (title.isNotBlank() && description.isNotBlank()) {
-                            imageUri?.toString()?.let { viewModel.addAssignment(title, description, it) }
+                            imageUri?.toString()?.let { viewModel.addAssignment(title, description, teacherid,it) }
                             navController.navigate(ROUT_ASSIGNMENT_LIST)
                         } else {
                             Toast.makeText(context, "Title and description cannot be empty!", Toast.LENGTH_SHORT).show()
@@ -165,7 +176,7 @@ fun AddAssignmentScreen(navController: NavController, viewModel: AssignmentViewM
 
 // Bottom Navigation Bar Component
 @Composable
-fun BottomNavigationBar(navController: NavController) {
+fun BottomNavigationBar1(navController: NavController) {
     NavigationBar(
         containerColor = Color(0xFF6F6A72),
         contentColor = Color.White

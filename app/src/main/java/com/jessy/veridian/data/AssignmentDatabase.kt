@@ -6,8 +6,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.jessy.veridian.database.dao.AssignmentDao
-import com.jessy.veridian.database.entities.Assignment
+import com.jessy.veridian.model.Assignment
 
 @Database(entities = [Assignment::class], version = 1, exportSchema = false)
 abstract class AssignmentDatabase : RoomDatabase() {
